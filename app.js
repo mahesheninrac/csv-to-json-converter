@@ -1,5 +1,6 @@
 let fName;
 let arrSize = 100;
+let newArr;
 const objData = {
   data: {},
   setdata(data) {
@@ -35,35 +36,40 @@ const objData = {
     }
   },
 
-  requestAPI() {
+  requestAPI(cutData) {
     fetch("http://localhost/csvtojsarr/process.php", {
       method: "POST",
-      body: JSON.stringify(this.data),
+      body: JSON.stringify(cutData),
     })
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
         console.log(objData.divideArr(arrSize));
-        console.log()
       });
   },
 
   divideArr(arrSize) {
     let mainData = this.data;
-    let newArr = [];
+    newArr = [];
     for (let i = 0; i < mainData.length; i += arrSize) {
       newArr.push(mainData.slice(i, i + arrSize));
     }
     return newArr;
   },
 
-  processMainArr(newArr){
-    let chunk;
-    for(let i; i<newArr.length; i++){
-      chunk = newArr[i]
+  processArr(newArr){
+    let smallAr = []
+    for(let i=0; i<newArr.length; i++){
+      smallAr=newArr[i]
+      let res = this.requestAPI(smallAr)
+      console.log(res)
     }
-    return chunk
+    return smallAr;
   }
+
+ 
+  
 };
 
 objData.init("#fileInput");
+objData.processArr(newArr)
