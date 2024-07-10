@@ -28,7 +28,8 @@ const objData = {
 
           self.setdata(jsonData);
 
-          self.requestAPI();
+          self.divideArr(arrSize);
+          self.processArr();
         };
 
         reader.readAsArrayBuffer(file);
@@ -44,32 +45,32 @@ const objData = {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        console.log(objData.divideArr(arrSize));
+        
       });
   },
 
   divideArr(arrSize) {
     let mainData = this.data;
     newArr = [];
-    for (let i = 0; i < mainData.length; i += arrSize) {
-      newArr.push(mainData.slice(i, i + arrSize));
-    }
+    let temp = [];
+    mainData.forEach((item, count) => {
+      temp.push(item);
+      if ((count + 1) % arrSize === 0 || count === mainData.length - 1) {
+        newArr.push(temp);
+        temp = [];
+      }
+    });
     return newArr;
   },
 
-  processArr(newArr){
-    let smallAr = []
-    for(let i=0; i<newArr.length; i++){
-      smallAr=newArr[i]
-      let res = this.requestAPI(smallAr)
-      console.log(res)
+  processArr() {
+    for (let i = 0; i < newArr.length; i++) {
+      let smallAr = newArr[i];
+      let res = this.requestAPI(smallAr);
+      console.log(res);
     }
-    return smallAr;
-  }
-
- 
-  
+    
+  },
 };
 
 objData.init("#fileInput");
-objData.processArr(newArr)
